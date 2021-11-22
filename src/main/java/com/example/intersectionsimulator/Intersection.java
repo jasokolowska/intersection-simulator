@@ -19,9 +19,8 @@ public class Intersection {
     }
 
     public void run() {
-//        timer.scheduleAtFixedRate(updateCarsPositions(), 0, 100);
-//        updateCarsPositions();
         move();
+
         if (isCarOnIntersection()) {
             driveThroughIntersection();
             placeCarOnIntersection();
@@ -62,13 +61,14 @@ public class Intersection {
                 Car car = entry.getCars().get(i);
                 if (i > 0) {
                     car.adjustSpeed(entry.getDistanceFromNextCar(i));
-                } else {
-                    if (car.getDistance() == 0) {
-                        car.setSpeed(0);
-                    } else {
-                        car.updateDistance(0.5);
-                    }
+                } else if (car.getDistance() == 0){
+                    car.setSpeed(0);
+                } else if (car.getDistance() == -1) {
+                    car.setSpeed(1);
+                } else if (i == 0 && car.getDistance() != 0) {
+                    car.setSpeed(10);
                 }
+                car.updateDistance(0.5);
             }
         }
     }
@@ -94,20 +94,24 @@ public class Intersection {
 
 
                 if (direction.equals(Direction.RIGHT)) {
-                    entry.getCars().remove(0);
+                    entry.getCars().get(0).setDistance(-1);
+//                    entry.getCars().remove(0);
                     System.out.println("Car removed RIGHT");
                 } else if (direction.equals(Direction.STRAIGHT) && rightEntry.getCars().size() == 0) {
-                    entry.getCars().remove(0);
+                    entry.getCars().get(0).setDistance(-1);
+//                    entry.getCars().remove(0);
                     System.out.println("Car removed STRAIGHT");
                 } else if (direction.equals(Direction.LEFT) && rightEntry.getCars().size() == 0
                         && frontEntry.getCars().size() == 0) {
-                    entry.getCars().remove(0);
+                    entry.getCars().get(0).setDistance(-1);
+//                    entry.getCars().remove(0);
                     System.out.println("Car removed LEFT");
                 } else if (counter == 0) {
                     counter++;
                 } else {
                     if (entry.getCars().size() > 0) {
-                        entry.getCars().remove(0);
+                        entry.getCars().get(0).setDistance(-1);
+//                        entry.getCars().remove(0);
                         System.out.println("Randomly picked car removed");
                     }
                 }

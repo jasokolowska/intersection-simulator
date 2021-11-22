@@ -1,17 +1,21 @@
 package com.example.intersectionsimulator;
 
+import javafx.animation.Animation;
+import javafx.animation.PathTransition;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.*;
+import javafx.util.Duration;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class IntersectionController {
+
+    private static final Duration TRANSLATE_DURATION = Duration.seconds(2);
+
     private Intersection intersection;
     private AnchorPane pane;
     private Group group = new Group();
@@ -23,7 +27,7 @@ public class IntersectionController {
         generatePoints();
     }
 
-    public  void run() {
+    public void run() {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -49,31 +53,32 @@ public class IntersectionController {
             Rectangle carView = null;
 
             for (Car car : entry.getCars()) {
-                if (ie.getName().equals("N")) {
-                    carView = createCar(car);
-                    carView.setRotate(90);
-                    carView.setX(point.getX());
-                    carView.setY(point.getY() + (300 - car.getDistance()));
-                } else if (ie.getName().equals("E")) {
-                    carView = createCar(car);
-                    carView.setX(point.getX() - (300 - car.getDistance()));
-                    carView.setY(point.getY());
-                } else if (ie.getName().equals("S")) {
-                    carView.setRotate(90);
-                    carView = createCar(car);
-                    carView.setX(point.getX() );
-                    carView.setY(point.getY() - (300 - car.getDistance()));
-                } else if (ie.getName().equals("W")) {
-                    carView = createCar(car);
-                    carView.setX(point.getX() + (300 - car.getDistance()));
-                    carView.setY(point.getY());
+                carView = createCar(car);
+                if (car.getDistance() == -1) {
+                    entry.getCars().remove(car);
+                } else {
+                    if (ie.getName().equals("N")) {
+                        carView.setRotate(90);
+                        carView.setX(point.getX());
+                        carView.setY(point.getY() + (300 - car.getDistance()));
+                    } else if (ie.getName().equals("E")) {
+                        carView.setX(point.getX() - (300 - car.getDistance()));
+                        carView.setY(point.getY());
+                    } else if (ie.getName().equals("S")) {
+                        carView.setRotate(90);
+                        carView.setX(point.getX());
+                        carView.setY(point.getY() - (300 - car.getDistance()));
+                    } else if (ie.getName().equals("W")) {
+                        carView.setX(point.getX() + (300 - car.getDistance()));
+                        carView.setY(point.getY());
+                    }
+                    group.getChildren().add(carView);
                 }
-
-                group.getChildren().add(carView);
             }
         }
         pane.getChildren().add(group);
     }
+
 
     private Rectangle createCar(Car car) {
         Color color = Color.RED;
@@ -89,15 +94,15 @@ public class IntersectionController {
     }
 
     private void generatePoints() {
-        intersection.getEntries().get(0).addPoint("Start", new Point("N", 350, 0));
-        intersection.getEntries().get(0).addPoint("Intersection", new Point("N", 350, 320));
+        intersection.getEntries().get(0).addPoint("Start", new Point("N", 330, 0));
+        intersection.getEntries().get(0).addPoint("Intersection", new Point("N", 350, 330));
         intersection.getEntries().get(0).addPoint("RightTurn", new Point("N", 311, 360));
         intersection.getEntries().get(0).addPoint("Straight", new Point("N", 215, 512));
-        intersection.getEntries().get(1).addPoint("Start", new Point("E", 800, 360));
+        intersection.getEntries().get(1).addPoint("Start", new Point("E", 800, 350));
         intersection.getEntries().get(1).addPoint("Intersection", new Point("E", 360, 215));
         intersection.getEntries().get(1).addPoint("RightTurn", new Point("E", 295, 180));
         intersection.getEntries().get(1).addPoint("Straight", new Point("E", 0, 215));
-        intersection.getEntries().get(2).addPoint("Start", new Point("S", 430, 800));
+        intersection.getEntries().get(2).addPoint("Start", new Point("S", 400, 800));
         intersection.getEntries().get(2).addPoint("Intersection", new Point("S", 295, 360));
         intersection.getEntries().get(2).addPoint("RightTurn", new Point("S", 335, 300));
         intersection.getEntries().get(2).addPoint("Straight", new Point("S", 295, 0));

@@ -15,7 +15,7 @@ public class IntersectionEntry {
     public IntersectionEntry(int id, String name) {
         this.id = id;
         this.name = name;
-//        this.cars.add(new Car());
+        this.cars.add(new Car());
     }
 
     public void addExit(Direction direction, String name) {

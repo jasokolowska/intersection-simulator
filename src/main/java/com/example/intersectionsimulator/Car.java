@@ -23,11 +23,13 @@ public class Car {
     }
 
     public void updateDistance(double time) {
-        this.distance -= (speed * time);
+        if (distance != -1) {
+            this.distance -= (speed * time);
+        }
     }
 
     public void adjustSpeed(double distanceDiff) {
-        if (distanceDiff < 55) {
+        if (distanceDiff < 70) {
             speed = 0;
         } else {
             speed = 10;
